@@ -2,10 +2,10 @@ services:
   backend:
     build:
       # [tae0y] 도커 빌드파일 내부에선 상위 디렉토리로 접근못해서 컴포즈파일에서 해준다
-      context: ..
-      dockerfile: docker/Dockerfile-backend
+      context: .
+      dockerfile: Dockerfile-backend
     ports:
       - "3001:3000"
     command: npm run start
     volumes:
-      - ../backend:/app
+      - ./backend:/app
