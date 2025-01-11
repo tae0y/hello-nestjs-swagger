@@ -23,16 +23,16 @@ RUN apk --no-cache add tzdata && \
 
 WORKDIR /app
 
-# nestjs 설정
+# nextjs 설정
 RUN npm install -g npm
-RUN npm install -g @nestjs/cli
+RUN npm install --save react react-dom next
 
 # [tae0y] 도커 빌드파일 내부에선 상위 디렉토리로 접근못함
-COPY backend/package*.json .
+COPY frontend/package*.json .
 RUN npm install
 
 # wait-for-it.sh
-#COPY backend/wait-for-it.sh ./
+#COPY frontend/wait-for-it.sh ./
 #RUN chmod +x wait-for-it.sh
 
 EXPOSE 3000
