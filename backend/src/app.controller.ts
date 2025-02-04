@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import {
   ApiTags,
   ApiResponse,
@@ -7,8 +7,10 @@ import {
   //ApiCookieAuth,
   ApiUnauthorizedResponse,
   ApiOperation,
+  ApiCookieAuth,
 } from '@nestjs/swagger';
 import { AppService } from './app.service';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @ApiTags('Root')
 @Controller()
@@ -22,30 +24,40 @@ export class AppController {
     summary: 'Root path',
     description: 'Root path',
   })
+  @ApiBearerAuth('access-token')
   getRoot(): string {
     return this.appService.getRoot();
   }
 
+  /**
+   * AuthGuard('access-token')
+   * @ApiBearerAuth('access-token')
+   */
   @Get('hello')
   @ApiResponse({ status: 200, description: 'Hello ~' })
   @ApiResponse({ status: 404, description: 'Not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: 'Hello path',
     description: 'Return Hello literal',
   })
-  @ApiBearerAuth('access-token')
   getHello(): string {
     return this.appService.getHello();
   }
 
+  /**
+   * AuthGuard('access-token')
+   * @ApiBearerAuth('refresh-token')
+   */
   @Get('goodbye')
   @ApiResponse({ status: 200, description: 'Goodbye ~' })
   @ApiResponse({ status: 404, description: 'Not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  @ApiBearerAuth('refresh-token')
-  //@ApiCookieAuth('refreshToken')
+  @ApiCookieAuth('refresh-token')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: 'Goodbye path',
     description: 'Return Goodbye literal',
