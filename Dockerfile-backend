@@ -27,8 +27,9 @@ WORKDIR /app
 RUN npm install -g npm
 RUN npm install -g @nestjs/cli
 
-# [tae0y] 도커 빌드파일 내부에선 상위 디렉토리로 접근못함
+# package*.json 파일 변경감지하여 이후 구문을 실행함
 COPY backend/package*.json .
+RUN rm -rf node_modules
 RUN npm install
 
 # wait-for-it.sh
